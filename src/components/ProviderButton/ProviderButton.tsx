@@ -6,7 +6,7 @@ type ProviderButtonPropType = {
 }
 
 const ProviderButton: React.FC<ProviderButtonPropType> = ({ name, src }) => {
-  console.count(`${name} provider render`)
+  // console.count(`${name} provider render`)
   const providersButtons: React.CSSProperties = {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',

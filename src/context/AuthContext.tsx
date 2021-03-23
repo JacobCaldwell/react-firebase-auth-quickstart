@@ -5,15 +5,15 @@ import firebase from 'firebase/app'
 
 
 type AuthProviderValues = {
-  signInWithEmailAndPassword: (email: string, password: string) => void
-  createUserWithEmailAndPassword: (email: string, password: string) => void
+  login: (email: string, password: string) => void
+  signup: (email: string, password: string) => void
   signInWithGoogle?: () => void
   signInWithFacebook?: () => void
   signInWithGithub?: () => void
   signInWithTwitter?: () => void
   // signInAnonymously?: () => void
   logout: () => void
-  user: firebase.User | null
+  currentUser: firebase.User | null
 }
 
 type PossibleProviders = keyof Providers
@@ -42,36 +42,40 @@ export function useAuth() {
 
 export const AuthProvider: React.FunctionComponent = ({ children }) => {
 
-  const [user, setUser] = useState<firebase.User | null>(null);
-
-  const signInWithProvider = async (provider: PossibleProviders) => auth.signInWithPopup(AuthProviders[provider])
+  const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
 
   // Create user method
-  const createUserWithEmailAndPassword = (email: string, password: string) => auth.createUserWithEmailAndPassword(email, password)
+  function signup(email: string, password: string) {
+    auth.createUserWithEmailAndPassword(email, password)
+  }
 
   // Sign in Methods
-  const signInWithEmailAndPassword = (email: string, password: string) => auth.signInWithEmailAndPassword(email, password)
-  const signInWithGoogle = () => signInWithProvider('googleProvider')
-  const signInWithFacebook = () => signInWithProvider('facebookProvider')
-  const signInWithGithub = () => signInWithProvider('githubProvider')
-  const signInWithTwitter = () => signInWithProvider('twitterProvider')
+  function login(email: string, password: string) {
+    auth.signInWithEmailAndPassword(email, password)
+  }
 
   // Sign out method
-  const logout = () => auth.signOut()
+  function logout() {
+    return auth.signOut()
+  }
 
   useEffect(() => {
     const unsubstribe = auth.onAuthStateChanged(user => {
-      setUser(user)
+      setCurrentUser(user)
     })
     return unsubstribe
   }, [])
 
+  // const signInWithProvider = async (provider: PossibleProviders) => auth.signInWithPopup(AuthProviders[provider])
+  // const signInWithGoogle = () => signInWithProvider('googleProvider')
+  // const signInWithFacebook = () => signInWithProvider('facebookProvider')
+  // const signInWithGithub = () => signInWithProvider('githubProvider')
+  // const signInWithTwitter = () => signInWithProvider('twitterProvider')
+
   const value: AuthProviderValues = {
-    user,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signInWithGoogle,
-    signInWithFacebook,
+    currentUser,
+    signup,
+    login,
     logout,
   }
 

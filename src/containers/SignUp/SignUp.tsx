@@ -1,59 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
-// import { useAuth } from "../auth/AuthContext"
+import React, { useState } from 'react';
+import { useAuth } from '../../context/newAuthContext'
 import { Link, useHistory } from "react-router-dom"
-import Input from "../../components/Input";
-
-import ProviderButton from "components/ProviderButton";
-
-
+import { Button, Input, ProviderButton } from "components";
 
 export const SignUp: React.FC = () => {
-  console.count('Signup Page Render')
 
-  const emailRef = React.createRef();
-  const passwordRef = React.createRef();
-  const passwordRepeatRef = React.createRef();
+  const emailRef = React.createRef<HTMLInputElement>();
+  const passwordRef = React.createRef<HTMLInputElement>();
+  const passwordRepeatRef = React.createRef<HTMLInputElement>();
 
-  // Retireieve fucntions from our AuthContext
-  // const { signup } = useAuth()
+  const { signup } = useAuth()
 
-  // const history = useHistory()
+  const history = useHistory()
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   console.log('submit form')
-  //   // if (passwordRef.current.value !== passwordRepeatRef.current.value) {
-  //   //   return
-  //   // }
-  //   // try {
-  //   //   await signup(emailRef.current.value, passwordRef.current.value);
-  //   //   history.push('/');
-  //   // } catch (error) {
-  //   //   console.log(error)
-  //   // }
-  // }
-
-  const [windowMatches, setWindowMatches] = useState(false)
-
-  // console.log(window.matchMedia("(min-width: 640px)").matches)
-
-  const handleWindowChange = useCallback(
-    (event) => {
-      setWindowMatches(event.matches)
-    },
-    [windowMatches, setWindowMatches],
-  )
-
-  useEffect(() => {
-    const test = window.matchMedia("(min-width: 640px)").addEventListener("change", handleWindowChange)
-
-    return () => test
-    // window.matchMedia("(min-width: 640px)")
-    //   .removeEventListener("change", handleWindowChange)
-
-
-  }, [windowMatches, handleWindowChange])
-
+  const handleSubmit = async (e: React.MouseEvent) => {
+    console.log('button click')
+    e.preventDefault()
+    if ((emailRef.current) && (passwordRef.current)) {
+      const { value: email } = emailRef.current
+      const { value: password } = passwordRef.current
+      console.log({ email, password })
+      try {
+        await signup(email, password)
+        history.push('/dashboard')
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   const wrapperStyle: React.CSSProperties = {
     alignItems: 'center',
@@ -106,21 +80,6 @@ export const SignUp: React.FC = () => {
     rowGap: '0.75rem',
   }
 
-  // const providersButtons: React.CSSProperties = {
-  //   alignItems: 'center',
-  //   border: '1px solid #E4E4E7',
-  //   color: '#71717A',
-  //   display: 'flex',
-  //   flexDirection: 'row',
-  //   height: '3rem',
-  //   justifyContent: 'center',
-  //   overflow: 'hidden',
-  //   borderRadius: '0.375rem',
-  //   transitionColor: 'background-color, border-color, color, fill, stroke',
-  //   transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-  //   transitionDuration: '150ms',
-  //   width: '100%',
-  // }
 
   return (
     <>
@@ -128,27 +87,29 @@ export const SignUp: React.FC = () => {
         <div style={containerStyle}>
           <h3 style={headerStyle}>Sign up</h3>
           <form
-            // onSubmit={() => handleSubmit}
             style={formStyle}>
             <Input
-              // ref={emailRef}
+              ref={emailRef}
               type="email"
               placeholder="Email"
               autocomplete="email"
               required />
             <Input
-              // ref={passwordRef}
+              ref={passwordRef}
               type="password"
               placeholder="Password"
               autocomplete="password"
               required />
             <Input
-              // ref={passwordRepeatRef}
+              ref={passwordRepeatRef}
               type="password"
               placeholder="Password"
               autocomplete="password"
               required />
-            <SubmitButton></SubmitButton>
+            <Button
+              name="Create Account"
+              onClick={handleSubmit}
+            />
           </form>
           <p style={textStyle}>or sign up with</p>
           <div style={providersContainer}>
@@ -176,48 +137,5 @@ export const SignUp: React.FC = () => {
         </div>
       </div>
     </>
-  )
-}
-
-const SubmitButton = () => {
-  console.count('button render')
-
-  const [submitButtonHover, setSubmitButtonHover] = useState(false)
-  const [submitButtonFocusState, setSubmitButtonFocusState] = useState(false)
-
-  const submitButtonStyle: React.CSSProperties = {
-    alignItems: 'center',
-    backgroundColor: submitButtonHover ? '#34D399' : '#10B981',
-    borderRadius: '0.375rem',
-    color: '#ffffff',
-    display: 'flex',
-    height: '3rem',
-    justifyContent: 'center',
-    outline: submitButtonFocusState ? '2px solid transparent' : '',
-    outlineOffset: submitButtonFocusState ? '2px' : '',
-    transitionProperty: 'background-color, border-color, color, fill, stroke',
-    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    transitionDuration: '150ms',
-    width: '100%',
-  }
-
-  // useEffect(() => {
-  //   console.log('submit button hover')
-  //   return () => {
-  //     // cleanup
-  //   }
-  // }, [submitButtonHover])
-
-
-  return (
-    <button
-      type="submit"
-      onMouseEnter={() => setSubmitButtonHover(!submitButtonHover)}
-      onMouseLeave={() => setSubmitButtonHover(!submitButtonHover)}
-      onFocus={() => setSubmitButtonFocusState(!submitButtonFocusState)}
-      onBlur={() => setSubmitButtonFocusState(!submitButtonFocusState)}
-      style={submitButtonStyle}>
-      Create Account
-    </button>
   )
 }

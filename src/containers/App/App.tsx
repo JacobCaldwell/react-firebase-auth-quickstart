@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthProvider } from "context/AuthContext";
+import { AuthProvider } from "../../context/newAuthContext";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Login, SignUp, Dashboard } from "containers";
@@ -12,8 +12,8 @@ function App() {
       <AuthProvider>
         <Router>
           <Switch>
-            <PrivateRoute path="/dashboard" component={Dashboard} />
-            <Route exact path="/" component={Login} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            {/* <Route exact path="/" component={Login} /> */}
             <Route path="/login" component={Login} />
             <Route path="/signup" component={SignUp} />
           </Switch>
