@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/newAuthContext'
+import { useAuth } from '../../context/AuthContext'
 import { Link, useHistory } from "react-router-dom"
 import { Button, Input, ProviderButton } from "components";
 

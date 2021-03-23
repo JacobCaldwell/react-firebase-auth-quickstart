@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useHistory } from "react-router-dom"
-import { useAuth } from "../../context/newAuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { ProviderButton, Input, Button } from 'components'
 
 export const Login: React.FC = () => {

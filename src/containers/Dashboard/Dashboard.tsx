@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAuth } from "../../context/newAuthContext"
+import { useAuth } from "../../context/AuthContext"
 import { Button } from "components";
 
 export default function Dashboard() {
