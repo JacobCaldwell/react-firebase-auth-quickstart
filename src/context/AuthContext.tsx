@@ -1,89 +1,55 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { auth } from "../auth/Firebase"
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { auth, signInWithProvider } from "../auth/Firebase"
 import firebase from 'firebase/app'
 
-
-
-type AuthProviderValues = {
-  login: (email: string, password: string) => void
-  signup: (email: string, password: string) => void
-  signInWithGoogle?: () => void
-  signInWithFacebook?: () => void
-  signInWithGithub?: () => void
-  signInWithTwitter?: () => void
-  // signInAnonymously?: () => void
-  logout: () => void
-  currentUser: firebase.User | null
+type ContextValueType = {
+  currentUser: typeof auth.currentUser
+  login: typeof auth.signInWithEmailAndPassword
+  signup: typeof auth.createUserWithEmailAndPassword
+  logout: typeof auth.signOut
+  signInWithProvider?: typeof signInWithProvider
 }
 
-type PossibleProviders = keyof Providers
-
-type Providers = {
-  googleProvider: firebase.auth.GoogleAuthProvider_Instance,
-  facebookProvider: firebase.auth.FacebookAuthProvider_Instance,
-  twitterProvider: firebase.auth.TwitterAuthProvider_Instance,
-  githubProvider: firebase.auth.GithubAuthProvider_Instance,
+function createAuthContext<T>() {
+  const context = React.createContext<T | undefined>(undefined);
+  function useAuth() {
+    const c = React.useContext(context);
+    if (!c) throw new Error("useAuth must be used inside an AuthProvider");
+    return c;
+  }
+  return [useAuth, context.Provider] as const;
 }
 
-const AuthProviders = {
-  googleProvider: new firebase.auth.GoogleAuthProvider(),
-  facebookProvider: new firebase.auth.FacebookAuthProvider(),
-  twitterProvider: new firebase.auth.TwitterAuthProvider(),
-  githubProvider: new firebase.auth.GithubAuthProvider()
-  // appleAuthProvider: new firebase.auth.App
-}
-
-
-const AuthContext = React.createContext<any>(null)
+const [useAuthContext, AuthContextProvider] = createAuthContext<ContextValueType>();
 
 export function useAuth() {
-  return useContext(AuthContext)
+  return useAuthContext()
 }
 
-export const AuthProvider: React.FunctionComponent = ({ children }) => {
-
+export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
 
-  // Create user method
-  function signup(email: string, password: string) {
-    auth.createUserWithEmailAndPassword(email, password)
-  }
-
-  // Sign in Methods
   function login(email: string, password: string) {
-    auth.signInWithEmailAndPassword(email, password)
+    return auth.signInWithEmailAndPassword(email, password)
   }
-
-  // Sign out method
+  function signup(email: string, password: string) {
+    return auth.createUserWithEmailAndPassword(email, password)
+  }
   function logout() {
     return auth.signOut()
   }
 
   useEffect(() => {
-    const unsubstribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
     })
-    return unsubstribe
+    console.log(unsubscribe);
+    return unsubscribe
   }, [])
 
-  // const signInWithProvider = async (provider: PossibleProviders) => auth.signInWithPopup(AuthProviders[provider])
-  // const signInWithGoogle = () => signInWithProvider('googleProvider')
-  // const signInWithFacebook = () => signInWithProvider('facebookProvider')
-  // const signInWithGithub = () => signInWithProvider('githubProvider')
-  // const signInWithTwitter = () => signInWithProvider('twitterProvider')
-
-  const value: AuthProviderValues = {
-    currentUser,
-    signup,
-    login,
-    logout,
-  }
-
   return (
-    <div>
-      <AuthContext.Provider value={value}>
-        {children}
-      </AuthContext.Provider>
-    </div>
-  )
-}
+    <AuthContextProvider
+      value={{ currentUser, login, signup, logout, signInWithProvider }}>
+      {children}
+    </AuthContextProvider>)
+};
