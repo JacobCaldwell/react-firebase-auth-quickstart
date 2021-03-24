@@ -8,6 +8,8 @@ type ContextValueType = {
   signup: typeof auth.createUserWithEmailAndPassword
   logout: typeof auth.signOut
   signInWithProvider: typeof signInWithProvider
+  isAuthenticated: boolean
+  isLoading: boolean
 }
 
 function createAuthContext<T>() {
@@ -28,6 +30,8 @@ export function useAuth() {
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   function login(email: string, password: string) {
     return auth.signInWithEmailAndPassword(email, password)
@@ -42,13 +46,22 @@ export const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
+      setIsLoading(false)
     })
     return unsubscribe
   }, [])
 
   return (
     <AuthContextProvider
-      value={{ currentUser, login, signup, logout, signInWithProvider }}>
+      value={{
+        currentUser,
+        login,
+        signup,
+        logout,
+        signInWithProvider,
+        isAuthenticated,
+        isLoading
+      }}>
       {children}
     </AuthContextProvider>)
 };
