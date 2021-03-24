@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { auth, signInWithProvider } from "../auth/Firebase"
+import { auth, signInWithProvider } from "auth/Firebase"
 import firebase from 'firebase/app'
 
 type ContextValueType = {
