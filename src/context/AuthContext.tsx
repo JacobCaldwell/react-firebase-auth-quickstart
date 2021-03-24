@@ -29,7 +29,9 @@ export function useAuth() {
 }
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<firebase.User | null>(null)
+  const [currentUser, setCurrentUser] = useState<firebase.User | null>(() => {
+    return JSON.parse(localStorage.getItem('userAuth') || '{}')
+  })
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -40,11 +42,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     return auth.createUserWithEmailAndPassword(email, password)
   }
   function logout() {
+    localStorage.removeItem('userAuth')
     return auth.signOut()
   }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
+      user && localStorage.setItem('userAuth', JSON.stringify(user))
       setCurrentUser(user)
       setIsLoading(false)
     })
