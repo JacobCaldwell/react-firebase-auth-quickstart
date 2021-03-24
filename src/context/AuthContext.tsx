@@ -7,7 +7,7 @@ type ContextValueType = {
   login: typeof auth.signInWithEmailAndPassword
   signup: typeof auth.createUserWithEmailAndPassword
   logout: typeof auth.signOut
-  signInWithProvider?: typeof signInWithProvider
+  signInWithProvider: typeof signInWithProvider
 }
 
 function createAuthContext<T>() {
@@ -43,7 +43,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
     })
-    console.log(unsubscribe);
     return unsubscribe
   }, [])
 

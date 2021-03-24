@@ -8,7 +8,7 @@ export const Login: React.FC = () => {
   const emailRef = React.createRef<HTMLInputElement>();
   const passwordRef = React.createRef<HTMLInputElement>();
 
-  const { login } = useAuth()
+  const { login, signInWithProvider } = useAuth()
 
   const history = useHistory()
 
@@ -29,6 +29,16 @@ export const Login: React.FC = () => {
       }
     }
   }
+
+  const handleSignInWithProvider =
+    async (provider: Parameters<typeof signInWithProvider>[0]) => {
+      try {
+        await signInWithProvider(provider)
+        history.push('/dashboard')
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   const wrapperStyle: React.CSSProperties = {
     alignItems: 'center',
@@ -109,13 +119,16 @@ export const Login: React.FC = () => {
           <div style={providersContainer}>
             <ProviderButton
               name="Facebook"
-              src="https://bit.ly/38YlZ4U" />
+              src="https://bit.ly/38YlZ4U"
+              onClick={() => handleSignInWithProvider('facebook')} />
             <ProviderButton
               name="Google"
-              src="https://bit.ly/2P9OzJw" />
+              src="https://bit.ly/2P9OzJw"
+              onClick={() => handleSignInWithProvider('google')} />
             <ProviderButton
               name="Apple"
-              src="https://bit.ly/3tDpV2I" />
+              src="https://bit.ly/3tDpV2I"
+              onClick={() => { }} />
           </div>
           <div style={textStyle}>
             Need an account?

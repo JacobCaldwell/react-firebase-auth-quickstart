@@ -15,17 +15,17 @@ const app = firebase.initializeApp(config)
 export const auth = app.auth()
 
 const AuthProviders = {
-  googleProvider: new firebase.auth.GoogleAuthProvider(),
-  facebookProvider: new firebase.auth.FacebookAuthProvider(),
-  twitterProvider: new firebase.auth.TwitterAuthProvider(),
-  githubProvider: new firebase.auth.GithubAuthProvider()
+  google: new firebase.auth.GoogleAuthProvider(),
+  facebook: new firebase.auth.FacebookAuthProvider(),
+  twitter: new firebase.auth.TwitterAuthProvider(),
+  github: new firebase.auth.GithubAuthProvider()
 }
 
 type Provider = {
-  googleProvider: firebase.auth.GoogleAuthProvider_Instance,
-  facebookProvider: firebase.auth.FacebookAuthProvider_Instance,
-  twitterProvider: firebase.auth.TwitterAuthProvider_Instance,
-  githubProvider: firebase.auth.GithubAuthProvider_Instance
+  google: firebase.auth.GoogleAuthProvider_Instance,
+  facebook: firebase.auth.FacebookAuthProvider_Instance,
+  twitter: firebase.auth.TwitterAuthProvider_Instance,
+  github: firebase.auth.GithubAuthProvider_Instance
 }
 
 type Providers = keyof Provider

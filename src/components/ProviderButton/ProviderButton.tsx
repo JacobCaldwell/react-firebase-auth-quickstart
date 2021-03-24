@@ -3,9 +3,10 @@ import React from 'react'
 type ProviderButtonPropType = {
   name: string,
   src: string,
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-const ProviderButton: React.FC<ProviderButtonPropType> = ({ name, src }) => {
+const ProviderButton: React.FC<ProviderButtonPropType> = ({ name, src, onClick }) => {
   // console.count(`${name} provider render`)
   const providersButtons: React.CSSProperties = {
     alignItems: 'center',
@@ -37,6 +38,7 @@ const ProviderButton: React.FC<ProviderButtonPropType> = ({ name, src }) => {
         target.style.backgroundColor = "#FFFFFF"
         target.style.borderColor = "#E4E4E7"
       }}
+      onClick={onClick}
     >
       <img
         style={{ paddingRight: '0.5rem' }}
