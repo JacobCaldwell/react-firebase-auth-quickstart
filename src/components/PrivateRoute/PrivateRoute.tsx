@@ -1,5 +1,5 @@
-import React, { Component, useEffect } from 'react'
-import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom'
+import React from 'react'
+import { Redirect, Route, RouteProps } from 'react-router-dom'
 import { useAuth } from "../../context/AuthContext";
 
 export default function PrivateRoute<RouteProps>({ ...rest }) {

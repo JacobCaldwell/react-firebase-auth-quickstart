@@ -4,15 +4,11 @@ import { Button } from "components";
 
 export default function Dashboard() {
   const { currentUser, logout } = useAuth()
-  // console.log(currentUser)
 
   const displayName = currentUser ? currentUser.displayName : 'null'
   const email = currentUser ? currentUser.email : 'null'
   const photoURL = currentUser ? currentUser.photoURL : 'null'
   const uid = currentUser ? currentUser.uid : 'null'
-
-
-  console.log(currentUser)
 
   const wrapperStyle: React.CSSProperties = {
     alignItems: 'center',
