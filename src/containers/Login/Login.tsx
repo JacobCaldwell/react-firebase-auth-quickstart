@@ -15,19 +15,27 @@ export const Login: React.FC = () => {
 
   const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault()
-    if ((emailRef.current) && (passwordRef.current)) {
-      const { value: email } = emailRef.current
-      const { value: password } = passwordRef.current
-      if (!email || !password) {
-        // todo: add error handling and validation for null states
-        return
-      }
-      try {
-        await login(email, password)
-        history.push('/dashboard')
-      } catch (error) {
-        console.log(error)
-      }
+
+    const email = emailRef.current && emailRef.current.value
+    const password = passwordRef.current && passwordRef.current.value
+
+    if (!email) {
+      // todo: add error handling
+      console.log('no email entered');
+      return
+    }
+
+    if (!password) {
+      // todo: add error handling
+      console.log('passwords can not be left blank');
+      return
+    }
+
+    try {
+      await login(email, password)
+      history.push('/dashboard')
+    } catch (error) {
+      console.log(error)
     }
   }
 

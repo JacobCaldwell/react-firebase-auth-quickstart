@@ -46,3 +46,23 @@ export const providersContainer: React.CSSProperties = {
   justifyContent: 'space-between',
   rowGap: '0.75rem',
 }
+
+export const errorMsgContainerStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+}
+
+export const errorMsgStyle: React.CSSProperties = {
+  backgroundColor: "#EF4444",
+  color: "#fff",
+  marginBottom: '.5rem',
+  padding: '.2rem',
+  paddingRight: '.5rem',
+  paddingLeft: '.5rem',
+  borderRadius: '0.375rem',
+  textTransform: 'uppercase',
+  fontSize: '0.75rem',
+  lineHeight: '1rem',
+  display: 'flex',
+  fontWeight: 400,
+}
