@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useHistory } from "react-router-dom"
 import { useAuth } from "context/AuthContext";
 import { ProviderButton, Input, Button } from 'components'
-import { wrapperStyle, containerStyle, headerStyle, formStyle, textStyle, providersContainer } from "styles/CommonStyles";
+import { wrapperStyle, containerStyle, headerStyle, formStyle, textStyle, providersContainer, errorMsgContainerStyle, errorMsgStyle } from "styles/CommonStyles";
 
 export const Login: React.FC = () => {
 
@@ -10,7 +10,7 @@ export const Login: React.FC = () => {
   const passwordRef = React.createRef<HTMLInputElement>();
 
   const { login, signInWithProvider } = useAuth()
-
+  const [errorMsg, setErrorMsg] = useState<String | null>(null)
   const history = useHistory()
 
   const handleSubmit = async (event: React.MouseEvent) => {
@@ -20,22 +20,32 @@ export const Login: React.FC = () => {
     const password = passwordRef.current && passwordRef.current.value
 
     if (!email) {
-      // todo: add error handling
-      console.log('no email entered');
+      setErrorMsg('no email entered')
       return
     }
 
     if (!password) {
-      // todo: add error handling
-      console.log('passwords can not be left blank');
+      setErrorMsg('must enter password')
       return
     }
 
     try {
       await login(email, password)
       history.push('/dashboard')
-    } catch (error) {
-      console.log(error)
+    } catch ({ code }) {
+      if (code == 'auth/invalid-email') {
+        setErrorMsg('invalid email')
+        return
+      }
+      if (code == 'auth/user-not-found') {
+        setErrorMsg('user not found')
+        return
+      }
+      if (code == 'auth/wrong-password') {
+        setErrorMsg('incorrect password')
+        return
+      }
+      setErrorMsg('could not login')
     }
   }
 
@@ -59,6 +69,11 @@ export const Login: React.FC = () => {
       <div style={wrapperStyle} >
         <div style={containerStyle}>
           <h3 style={headerStyle}>Login</h3>
+          {errorMsg ? <div style={errorMsgContainerStyle}>
+            <div style={errorMsgStyle}>
+              {errorMsg}
+            </div>
+          </div> : ''}
           <form
             style={formStyle}>
             <Input
@@ -66,6 +81,7 @@ export const Login: React.FC = () => {
               type="email"
               placeholder="Email"
               autocomplete="email"
+              checkValidity={false}
               required />
             <Input
               ref={passwordRef}

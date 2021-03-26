@@ -11,6 +11,7 @@ export const SignUp: React.FC = () => {
   const passwordRef = React.createRef<HTMLInputElement>();
   const passwordRepeatRef = React.createRef<HTMLInputElement>();
   const [emailValid, setEmailValidity] = useState(true)
+  const [passwordsMatch, setpasswordsMatch] = useState(true)
   const [errorMsg, setErrorMsg] = useState<String | null>(null)
   const { signup, signInWithProvider } = useAuth()
   const history = useHistory()
@@ -39,6 +40,7 @@ export const SignUp: React.FC = () => {
 
     if (password !== passwordRepeat) {
       setErrorMsg("passwords don't match");
+      setpasswordsMatch(false)
       return
     }
 
@@ -53,7 +55,9 @@ export const SignUp: React.FC = () => {
     } catch ({ code }) {
       if (code == "auth/email-already-in-use") {
         setErrorMsg('email address already in use')
+        return
       }
+      setErrorMsg('error creating account')
     }
   }
 
@@ -97,14 +101,14 @@ export const SignUp: React.FC = () => {
               type="password"
               placeholder="Password"
               autocomplete="password"
-              setValidity={true}
+              setValidity={passwordsMatch}
               required />
             <Input
               ref={passwordRepeatRef}
               type="password"
               placeholder="Password"
               autocomplete="password"
-              setValidity={true}
+              setValidity={passwordsMatch}
               required />
             <Button
               name="Create Account"

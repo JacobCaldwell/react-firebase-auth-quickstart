@@ -8,6 +8,7 @@ type Props = {
   required?: boolean,
   onValidityChange?: (valid: boolean) => void,
   setValidity?: boolean,
+  checkValidity?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
@@ -20,7 +21,11 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
 
   // This method handles the state changes / validity checking when the input is changed
   const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    setInvalidInput(!event.target.validity.valid)
+    // checks if checkValidity props is set false otherwise
+    // the input check for validity on change by default
+    if (props.checkValidity === undefined || props.checkValidity) {
+      setInvalidInput(!event.target.validity.valid)
+    }
   }
 
   // This method handles the state change when the input is focued
@@ -29,6 +34,9 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   }
 
   useEffect(() => {
+    // checks if onValidityChange props exists and if it does
+    // returns whether the input is valid everytime invalidInput
+    // state is changed
     props.onValidityChange && props.onValidityChange(!invalidInput)
     return () => { }
   }, [invalidInput])
@@ -48,7 +56,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
 
   const inputStyle: React.CSSProperties = {
     border: '1px solid',
-    borderColor: (invalidInput || !props.setValidity) ? '#F87171' : '#E4E4E7',
+    borderColor: (invalidInput || props.setValidity === false) ? '#F87171' : '#E4E4E7',
     borderRadius: '0.25rem',
     fontSize: '0.875rem',
     lineHeight: '1.25rem',
@@ -62,7 +70,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   }
 
   const placeholderStyle: React.CSSProperties = {
-    color: (invalidInput || !props.setValidity) ?
+    color: (invalidInput || props.setValidity === false) ?
       ('#F87171') : (fieldActive ? '#A1A1AA' : '#D4D4D8'),
     fontSize: fieldActive ? '0.75rem' : 'inherit',
     left: '0.75rem',
@@ -76,7 +84,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
   }
 
   const tagStyle: React.CSSProperties = {
-    color: (invalidInput || !props.setValidity) ?
+    color: (invalidInput || props.setValidity === false) ?
       ('#F87171') : (fieldActive ? '#A1A1AA' : '#D4D4D8'),
     fontSize: '0.75rem',
     lineHeight: '1rem',
