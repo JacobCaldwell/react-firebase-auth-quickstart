@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 type ButtonProps = {
   name: string
   onClick: React.MouseEventHandler<HTMLButtonElement>
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -34,6 +35,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       onMouseLeave={() => setSubmitButtonHover(!submitButtonHover)}
       onFocus={() => setSubmitButtonFocusState(!submitButtonFocusState)}
       onBlur={() => setSubmitButtonFocusState(!submitButtonFocusState)}
+      disabled={props.disabled}
       style={submitButtonStyle}>
       {props.name}
     </button>

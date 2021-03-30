@@ -7,6 +7,7 @@ type ContextValueType = {
   login: typeof auth.signInWithEmailAndPassword
   signup: typeof auth.createUserWithEmailAndPassword
   logout: typeof auth.signOut
+  forgot: typeof auth.sendPasswordResetEmail
   signInWithProvider: typeof signInWithProvider
   isAuthenticated: boolean
   isLoading: boolean
@@ -45,6 +46,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('userAuth')
     return auth.signOut()
   }
+  function forgot(email: string) {
+    return auth.sendPasswordResetEmail(email)
+  }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -62,6 +66,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         login,
         signup,
         logout,
+        forgot,
         signInWithProvider,
         isAuthenticated,
         isLoading

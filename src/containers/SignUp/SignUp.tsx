@@ -3,7 +3,6 @@ import { useAuth } from 'context/AuthContext'
 import { Link, useHistory } from "react-router-dom"
 import { Button, Input, ProviderButton } from "components";
 import { wrapperStyle, containerStyle, headerStyle, formStyle, textStyle, providersContainer, errorMsgContainerStyle, errorMsgStyle } from "styles/CommonStyles";
-// import { reducer } from "helpers/Validation";
 
 export const SignUp: React.FC = () => {
 
@@ -13,11 +12,13 @@ export const SignUp: React.FC = () => {
   const [emailValid, setEmailValidity] = useState(true)
   const [passwordsMatch, setpasswordsMatch] = useState(true)
   const [errorMsg, setErrorMsg] = useState<String | null>(null)
+  const [isDisabled, setIsDisabled] = useState(false)
   const { signup, signInWithProvider } = useAuth()
   const history = useHistory()
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault()
+    setIsDisabled(true)
 
     const email = emailRef.current && emailRef.current.value
     const password = passwordRef.current && passwordRef.current.value
@@ -25,27 +26,32 @@ export const SignUp: React.FC = () => {
 
     if (!email) {
       setErrorMsg('no email entered')
+      setIsDisabled(false)
       return
     }
 
     if (!emailValid) {
       setErrorMsg('email is not valid')
+      setIsDisabled(false)
       return
     }
 
     if (!password || !passwordRepeat) {
       setErrorMsg('must enter password')
+      setIsDisabled(false)
       return
     }
 
     if (password !== passwordRepeat) {
       setErrorMsg("passwords don't match");
+      setIsDisabled(false)
       setpasswordsMatch(false)
       return
     }
 
     if (!password.match("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")) {
       setErrorMsg('password complexity not met');
+      setIsDisabled(false)
       return
     }
 
@@ -55,9 +61,11 @@ export const SignUp: React.FC = () => {
     } catch ({ code }) {
       if (code == "auth/email-already-in-use") {
         setErrorMsg('email address already in use')
+        setIsDisabled(false)
         return
       }
       setErrorMsg('error creating account')
+      setIsDisabled(false)
     }
   }
 
@@ -113,6 +121,7 @@ export const SignUp: React.FC = () => {
             <Button
               name="Create Account"
               onClick={handleSubmit}
+              disabled={isDisabled}
             />
           </form>
           <p style={textStyle}>or sign up with</p>
@@ -132,14 +141,7 @@ export const SignUp: React.FC = () => {
           </div>
           <div style={textStyle}>
             Already have an account?
-            <Link
-              style={{
-                color: 'inherit',
-                fontSize: 'inherit',
-                textDecoration: 'inherit'
-              }}
-              to="/login"
-            > Login</Link>
+            <Link to="/login"> Login</Link>
           </div>
         </div>
       </div>

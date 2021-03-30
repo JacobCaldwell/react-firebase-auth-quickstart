@@ -111,14 +111,10 @@ export const Login: React.FC = () => {
           </div>
           <div style={textStyle}>
             Need an account?
-            <Link
-              style={{
-                color: 'inherit',
-                fontSize: 'inherit',
-                textDecoration: 'inherit'
-              }}
-              to="/signup"
-            > Sign up</Link>
+            <Link to="/signup"> Sign up</Link>
+          </div>
+          <div style={textStyle}>
+            <Link to="/forgot-password">forgot password?</Link>
           </div>
         </div>
       </div>
