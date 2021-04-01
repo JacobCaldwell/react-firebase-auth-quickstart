@@ -3,7 +3,7 @@ import { AuthProvider } from "../../context/AuthContext";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Login, SignUp, Dashboard, ForgotPassword } from "containers";
-import PrivateRoute from "components/PrivateRoute";
+import { PrivateRoute, GuestRoute } from "components";
 
 
 function App() {
@@ -13,10 +13,10 @@ function App() {
         <Router>
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/" component={Login} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/forgot-password" component={ForgotPassword} />
+            <GuestRoute exact path="/" component={Login} />
+            <GuestRoute path="/login" component={Login} />
+            <GuestRoute path="/signup" component={SignUp} />
+            <GuestRoute path="/forgot-password" component={ForgotPassword} />
           </Switch>
         </Router>
       </AuthProvider>
